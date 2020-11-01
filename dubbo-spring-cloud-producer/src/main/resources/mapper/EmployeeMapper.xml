@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zy.producer.orm.mapper.EmployeeMapper">
+    <resultMap id="queryEmployeePerformancePageList" type="com.zy.producer.orm.dto.EmployeeDTO">
+        <id property="id" column="id"/>
+        <result property="employeeName" column="employeeName"/>
+        <result property="gender" column="gender"/>
+        <result property="departmentName" column="departmentName"/>
+        <result property="jobName" column="jobName"/>
+        <result property="performanceDegree" column="performanceDegree"/>
+    </resultMap>
+
+
+    <select id="queryEmployeePerformancePageList" resultMap="queryEmployeePerformancePageList">
+        SELECT
+          t1.id AS id,t1.employee_name AS employeeName,t1.gender AS gender, t1.department_name AS departmentName,
+          t1.job_name AS jobName
+        <if test="param.quarter == 'Q'.toString()">
+            ,t2.q_degree AS performanceDegree
+        </if>
+        <if test="param.quarter == 'Q1'.toString()">
+            ,t2.q1_degree AS performanceDegree
+        </if>
+        <if test="param.quarter == 'Q2'.toString()">
+            ,t2.q2_degree AS performanceDegree
+        </if>
+        <if test="param.quarter == 'Q3'.toString()">
+            ,t2.q3_degree AS performanceDegree
+        </if>
+        <if test="param.quarter == 'Q4'.toString()">
+            ,t2.q4_degree AS performanceDegree
+        </if>
+        FROM
+          tb_employee t1
+        LEFT JOIN
+          tb_performance t2
+        ON
+          t1.id=t2.employee_id
+        <where>
+            <if test="param.employeeId != null and param.employeeId != ''">
+                t1.id = #{param.employeeId}
+            </if>
+            <if test="param.departmentId != null and param.departmentId != ''">
+                t1.department_id = #{param.departmentId}
+            </if>
+            <if test="param.jobId != null and param.jobId != ''">
+                t1.job_id = #{param.jobId}
+            </if>
+            <if test="param.performanceYear != null and param.performanceYear != ''">
+                t2.performance_year = #{param.performanceYear}
+            </if>
+        </where>
+    </select>
+
+    <insert id="addEmployee">
+      INSERT INTO
+        tb_employee
+        (
+            employee_name,
+            gender,
+            birthday,
+            department_id,
+            department_name,
+            job_id,
+            job_name,
+            leader_id,
+            update_time,
+            update_user
+        )
+      VALUES
+        (
+            #{employeeName},
+            #{gender},
+            #{birthday},
+            #{departmentId},
+            #{departmentName},
+            #{jobId},
+            #{jobName},
+            #{leaderId},
+            #{updateTime},
+            #{updateUser}
+        )
+    </insert>
+</mapper>

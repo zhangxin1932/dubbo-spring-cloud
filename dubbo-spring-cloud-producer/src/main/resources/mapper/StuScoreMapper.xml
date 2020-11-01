@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zy.producer.easyexcel.mapper.StuScoreMapper">
+
+    <resultMap id="getAllScore" type="com.zy.producer.easyexcel.entity.StuScoreExcel">
+        <result property="name" column="name"/>
+        <result property="chineseScore" column="chineseScore"/>
+        <result property="mathScore" column="mathScore"/>
+        <result property="englishScore" column="englishScore"/>
+        <result property="totalScore" column="totalScore"/>
+        <result property="classRanking" column="classRanking"/>
+        <result property="schoolRanking" column="schoolRanking"/>
+        <result property="examDate" column="examDate"/>
+    </resultMap>
+
+    <select id="getAllScore" resultMap="getAllScore">
+        SELECT * FROM excel_stu_score
+    </select>
+
+    <insert id="saveStuScore" parameterType="java.util.List">
+        INSERT INTO excel_stu_score
+        (name, chineseScore, mathScore, englishScore, totalScore, classRanking, schoolRanking, examDate)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.name},
+            #{item.chineseScore},
+            #{item.mathScore},
+            #{item.englishScore},
+            #{item.totalScore},
+            #{item.classRanking},
+            #{item.schoolRanking},
+            #{item.examDate}
+            )
+        </foreach>
+    </insert>
+</mapper>
