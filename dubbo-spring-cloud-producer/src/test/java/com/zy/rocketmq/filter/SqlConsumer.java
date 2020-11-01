@@ -1,21 +1,20 @@
-package com.zy.rocketmq.consumer;
+package com.zy.rocketmq.filter;
 
 import org.apache.rocketmq.client.consumer.DefaultLitePullConsumer;
+import org.apache.rocketmq.client.consumer.MessageSelector;
 import org.apache.rocketmq.client.exception.MQClientException;
 import org.apache.rocketmq.common.message.MessageExt;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
-public class ConsumerPull {
+public class SqlConsumer {
     public static void main(String[] args) throws MQClientException {
-        DefaultLitePullConsumer consumer = new DefaultLitePullConsumer("rocketmq-zy-consumer-group-push01");
+        DefaultLitePullConsumer consumer = new DefaultLitePullConsumer("consumer-sql-group01");
         consumer.setNamesrvAddr("192.168.0.156:9876");
 
-        // 消费该 topic 下所有 tags
-        // consumer.subscribe("rocketmq-zy-topic1", "*");
-        // 按照 tags 过滤
-        consumer.subscribe("rocketmq-zy-topic1", "rocketmq-zy-t1-tags1 || rocketmq-zy-t1-tags1");
+        // 按照 sql 过滤, 此处 up 来自 Producer 方定义的属性
+        consumer.subscribe("sql-group01-topic1", MessageSelector.bySql("up > 2"));
         consumer.start();
 
         while (true) {
@@ -23,4 +22,5 @@ public class ConsumerPull {
             msgs.forEach(e -> System.out.println(new String(e.getBody(), StandardCharsets.UTF_8) + "\t" + e));
         }
     }
+
 }
