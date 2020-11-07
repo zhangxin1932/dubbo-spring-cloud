@@ -1,4 +1,4 @@
-package com.zy.rocketmq.filter;
+package com.zy.rocketmq.messagefilter;
 
 import org.apache.rocketmq.client.consumer.DefaultLitePullConsumer;
 import org.apache.rocketmq.client.exception.MQClientException;
@@ -10,7 +10,7 @@ import java.util.List;
 public class TagsConsumer {
     public static void main(String[] args) throws MQClientException {
         DefaultLitePullConsumer consumer = new DefaultLitePullConsumer("consumer-tags-group01");
-        consumer.setNamesrvAddr("192.168.0.156:9876");
+        consumer.setNamesrvAddr("192.168.0.156:9876;192.168.0.156:9877");
 
         // 消费该 topic 下所有 tags
         // consumer.subscribe("tags-group01-topic1", "*");

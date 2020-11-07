@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
 public class ProducerOneway {
     public static void main(String[] args) throws InterruptedException, MQClientException, RemotingException {
         DefaultMQProducer producer = new DefaultMQProducer("rocketmq-zy-group-oneway");
-        producer.setNamesrvAddr("192.168.0.156:9876");
+        producer.setNamesrvAddr("192.168.0.156:9876;192.168.0.156:9877");
 
         producer.start();
 

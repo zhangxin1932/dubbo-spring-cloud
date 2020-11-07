@@ -19,7 +19,7 @@ public class ProducerAsync {
 
     public static void main(String[] args) throws InterruptedException, MQClientException, RemotingException {
         DefaultMQProducer producer = new DefaultMQProducer("rocketmq-zy-group-async");
-        producer.setNamesrvAddr("192.168.0.156:9876");
+        producer.setNamesrvAddr("192.168.0.156:9876;192.168.0.156:9877");
 
         producer.start();
 

@@ -19,7 +19,7 @@ public class ProducerSync {
     public static void main(String[] args) throws MQClientException, RemotingException, InterruptedException, MQBrokerException {
         DefaultMQProducer producer = new DefaultMQProducer();
 
-        producer.setNamesrvAddr("192.168.0.156:9876");
+        producer.setNamesrvAddr("192.168.0.156:9876;192.168.0.156:9877");
         producer.setProducerGroup("rocketmq-zy-group");
 
         producer.start();

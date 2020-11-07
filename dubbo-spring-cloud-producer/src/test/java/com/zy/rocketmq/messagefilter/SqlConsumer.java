@@ -1,4 +1,4 @@
-package com.zy.rocketmq.filter;
+package com.zy.rocketmq.messagefilter;
 
 import org.apache.rocketmq.client.consumer.DefaultLitePullConsumer;
 import org.apache.rocketmq.client.consumer.MessageSelector;
@@ -11,7 +11,7 @@ import java.util.List;
 public class SqlConsumer {
     public static void main(String[] args) throws MQClientException {
         DefaultLitePullConsumer consumer = new DefaultLitePullConsumer("consumer-sql-group01");
-        consumer.setNamesrvAddr("192.168.0.156:9876");
+        consumer.setNamesrvAddr("192.168.0.156:9876;192.168.0.156:9877");
 
         // 按照 sql 过滤, 此处 up 来自 Producer 方定义的属性
         consumer.subscribe("sql-group01-topic1", MessageSelector.bySql("up > 2"));
