@@ -66,6 +66,7 @@ public class JobConfiguration03 {
     @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
     public MethodInvokingJobDetailFactoryBean teacherMethodInvokingJobDetailFactoryBean() {
         MethodInvokingJobDetailFactoryBean bean = new MethodInvokingJobDetailFactoryBean();
+        // https://www.cnblogs.com/vic-tory/p/13289432.html
         bean.setConcurrent(false);
         bean.setTargetObject(teacherJobExecutor());
         bean.setTargetMethod("execute");
