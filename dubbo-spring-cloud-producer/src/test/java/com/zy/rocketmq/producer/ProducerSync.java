@@ -22,6 +22,10 @@ public class ProducerSync {
         producer.setNamesrvAddr("192.168.0.156:9876;192.168.0.156:9877");
         producer.setProducerGroup("rocketmq-zy-group");
 
+        // 设置 topicQueue 的数量
+        // producer.createTopic("rocketmq-zy-topic1");
+        producer.setDefaultTopicQueueNums(20);
+
         producer.start();
 
         for (int i = 0; i < 5; i++) {
