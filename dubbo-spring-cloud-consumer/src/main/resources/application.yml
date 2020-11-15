@@ -35,3 +35,9 @@ spring:
     show-sql: true
   kafka:
     bootstrap-servers: "192.168.0.156:9092"
+rocketmq:
+  name-server: 192.169.0.156:9876;192.168.0.156:9877
+  custom:
+    consumer-group: spring-boot-rocketmq-consumer-group01
+    topic: spring-boot-rocketmq-topic01
+    tags: spring-boot-rocketmq-tags01
