@@ -45,6 +45,11 @@
             <groupId>com.netflix.archaius</groupId>
             <artifactId>archaius-core</artifactId>
         </dependency>
+        <!-- 端点监管 endpoint actuator -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

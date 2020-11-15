@@ -45,3 +45,32 @@ server:
         path: /
 #        secure: true
         name: authId
+
+#spring-boot 端点相关配置
+endpoints:
+  shutdown:
+    enabled: true
+  #    关闭所有端点
+  enabled: false
+  #  只留一个端点
+  beans:
+    enabled: true
+#    定制endpoint的id或者访问路径
+#  beans:
+#    id: mybean
+
+
+# 从yml中解析自定义配置
+person:
+  lastName: 张三
+  age: 20
+  boss: false
+  birth: 1999/09/09
+  maps: {k1: v1,k2: v2}
+  lists:
+    - z1
+    - z2
+    - z3
+  dog:
+    name: little dog
+    age: 2
