@@ -47,18 +47,16 @@ server:
         name: authId
 
 #spring-boot 端点相关配置
-endpoints:
-  shutdown:
-    enabled: true
-  #    关闭所有端点
-  enabled: false
-  #  只留一个端点
-  beans:
-    enabled: true
-#    定制endpoint的id或者访问路径
-#  beans:
-#    id: mybean
-
+management:
+  server:
+    port: 9090
+  endpoints:
+    enabled-by-default: true
+    web:
+      exposure:
+        include: '*'
+      # 访问方式: http://localhost:9090/zy/cloud
+      base-path: /zy/cloud
 
 # 从yml中解析自定义配置
 person:

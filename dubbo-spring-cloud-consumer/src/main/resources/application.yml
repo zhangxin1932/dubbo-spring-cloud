@@ -35,6 +35,23 @@ spring:
     show-sql: true
   kafka:
     bootstrap-servers: "192.168.0.156:9092"
+  rabbitmq:
+    username: zy
+    password: 123456
+    host: 192.168.0.156
+    port: 5672
+    connection-timeout: 15000
+    listener:
+      simple:
+        acknowledge-mode: manual #手工签收
+        concurrency: 5
+        max-concurrency: 10
+    virtual-host: /
+  cloud:
+    bus:
+      enabled: true
+      trace:
+        enabled: true
 rocketmq:
   name-server: 192.169.0.156:9876;192.168.0.156:9877
   custom:
