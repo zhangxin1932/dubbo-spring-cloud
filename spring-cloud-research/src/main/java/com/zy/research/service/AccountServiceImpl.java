@@ -1,4 +1,4 @@
-package com.zy.research.service.impl;
+package com.zy.research.service;
 
 import org.springframework.stereotype.Service;
 

@@ -1,9 +1,9 @@
 package com.zy.research.controller;
 
-import com.zy.service.IMailService;
-import com.zy.utils.MailSenderDTO;
-import com.zy.utils.MailUtils;
-import com.zy.vo.MailReqVO;
+import com.zy.research.service.MailServiceImpl;
+import com.zy.research.utils.MailSenderDTO;
+import com.zy.research.utils.MailUtils;
+import com.zy.research.vo.MailReqVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,7 +23,7 @@ import java.util.List;
 public class MailController {
 
     @Autowired
-    private IMailService mailService;
+    private MailServiceImpl mailService;
 
     @RequestMapping("sendSimpleMail")
     public ResponseEntity<String> sendSimpleMail(@Valid @RequestBody MailReqVO reqVO) {

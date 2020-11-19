@@ -1,8 +1,7 @@
-package com.zy.research.service.impl;
+package com.zy.research.service;
 
-import com.zy.service.IMailService;
-import com.zy.utils.MailUtils;
-import com.zy.vo.MailReqVO;
+import com.zy.research.utils.MailUtils;
+import com.zy.research.vo.MailReqVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,7 +29,7 @@ import java.util.Objects;
  */
 @Slf4j
 @Service
-public class MailServiceImpl implements IMailService {
+public class MailServiceImpl {
 
     @Autowired
     private JavaMailSender sender;
@@ -38,7 +37,6 @@ public class MailServiceImpl implements IMailService {
     @Value("${spring.mail.username}")
     private String from;
 
-    @Override
     public void sendSimpleMail(MailReqVO reqVO) throws Exception {
         JavaMailSenderImpl mailSender = MailUtils.MAILS_MAP.get(reqVO.getFrom());
         if (Objects.isNull(mailSender)) {
@@ -47,7 +45,6 @@ public class MailServiceImpl implements IMailService {
         mailSender.send(buildSimpleMailMessage(reqVO));
     }
 
-    @Override
     public void sendSimpleMailWithAttachment(MailReqVO reqVO) throws Exception {
         JavaMailSenderImpl mailSender = MailUtils.MAILS_MAP.get(reqVO.getFrom());
         if (Objects.isNull(mailSender)) {

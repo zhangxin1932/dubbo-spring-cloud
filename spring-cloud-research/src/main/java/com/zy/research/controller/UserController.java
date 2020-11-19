@@ -1,6 +1,6 @@
 package com.zy.research.controller;
 
-import com.zy.vo.TbUser;
+import com.zy.research.vo.TbUser;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;

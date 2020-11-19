@@ -1,6 +1,6 @@
 package com.zy.research.controller;
 
-import com.zy.config.async.SpringAsyncService;
+import com.zy.research.config.async.SpringAsyncService;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 

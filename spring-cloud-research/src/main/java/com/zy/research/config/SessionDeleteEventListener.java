@@ -1,6 +1,6 @@
 package com.zy.research.config;
 
-import com.zy.controller.UserController;
+import com.zy.research.controller.UserController;
 import org.springframework.context.ApplicationListener;
 import org.springframework.session.events.SessionDeletedEvent;
 import org.springframework.stereotype.Component;
