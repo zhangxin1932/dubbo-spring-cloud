@@ -5,17 +5,14 @@ import com.zy.two.datasource.bean.Stu;
 import com.zy.two.datasource.service.StuServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 @RestController
-@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/stu/", produces = MediaType.APPLICATION_JSON_VALUE)
 public class StuController {
 
     @Autowired
@@ -31,8 +28,13 @@ public class StuController {
         return params;
     }
 
-    @PostMapping("/twoDataSource")
+    @PostMapping("twoDataSource")
     public List<Stu> twoDataSource(){
+        return stuService.hello();
+    }
+
+    @GetMapping("getAllStu")
+    public List<Stu> getAllStu(){
         return stuService.hello();
     }
 

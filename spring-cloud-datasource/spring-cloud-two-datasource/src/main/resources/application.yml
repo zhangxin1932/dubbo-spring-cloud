@@ -9,3 +9,11 @@ datasource: #注意这里不是spring:下的
     driverClassName: com.mysql.jdbc.Driver
     username: root
     password: 123456
+spring:
+  mvc:
+    view:
+      prefix: /
+      suffix: .html
+    static-path-pattern: /**
+  resources:
+    static-locations: classpath:/static/
