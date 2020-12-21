@@ -1,6 +1,6 @@
 package com.zy.research;
 
-import com.zy.config.ymlbean.YmlBean;
+import com.zy.research.config.ymlbean.YmlBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

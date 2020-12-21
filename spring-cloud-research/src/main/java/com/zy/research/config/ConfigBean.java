@@ -1,9 +1,14 @@
 package com.zy.research.config;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.beans.factory.config.MethodInvokingFactoryBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.session.web.http.HeaderHttpSessionIdResolver;
-import org.springframework.session.web.http.HttpSessionIdResolver;
+import org.springframework.context.annotation.Scope;
+import javax.annotation.PostConstruct;
+import java.util.Map;
+import java.util.Objects;
 
 @Configuration
 public class ConfigBean {
@@ -11,5 +16,29 @@ public class ConfigBean {
     public HttpSessionIdResolver httpSessionIdResolver() {
         return new HeaderHttpSessionIdResolver("x-auth-token");
     }*/
+
+    @Value("#{systemProperties}")
+    private Map<String, Object> v;
+
+    @Value("#{@systemProperties}")
+    private Map<String, Object> v1;
+
+    @Bean(value = "methodInvokingFactoryBean")
+    @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+    public MethodInvokingFactoryBean methodInvokingFactoryBean() {
+        MethodInvokingFactoryBean bean = new MethodInvokingFactoryBean();
+        bean.setTargetObject("#{@systemProperties}");
+        bean.setTargetMethod("putAll");
+        bean.setArguments("");
+        return bean;
+    }
+
+    @PostConstruct
+    public void init() {
+        System.out.println(">>>>>>>>>>");
+        System.out.println(v.get("user.home"));
+        System.out.println(Objects.equals(v, v1));
+        System.out.println(">>>>>>>>>>");
+    }
 
 }
