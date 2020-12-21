@@ -11,6 +11,7 @@ import java.nio.charset.StandardCharsets;
 /**
  * 1.修改 tools.sh 配置文件
  * https://blog.csdn.net/qq_42184068/article/details/105910181
+ *
  * 2.配置权限 (画个流程图)
  * sh mqadmin updateAclConfig -n 192.168.0.156:9876 -b 192.168.0.156:10911 -a rockettomcat -s 123456789 -t aclTopic=PUB|SUB -g rocketmq-zy-group-consumer=SUB
  * https://blog.csdn.net/prestigeding/article/details/94317946
@@ -22,6 +23,9 @@ import java.nio.charset.StandardCharsets;
  *   - aclTopic=PUB|SUB
  *   groupPerms:
  *   - rocketmq-zy-group-consumer=SUB
+ *
+ * 3.ACL权限校验类
+ * org.apache.rocketmq.acl.plain.PlainPermissionManager#validate(org.apache.rocketmq.acl.plain.PlainAccessResource)
  */
 public class AclProducer {
     public static final String ACCESS_KEY = "rockettomcat";
