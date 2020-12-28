@@ -11,8 +11,8 @@ public class TeacherServiceImpl {
     private static final ExecutorService executorService = Executors.newFixedThreadPool(10);
 
     public void teach(Long times) {
-        singleton();
-        // multiThread(times);
+//        singleton();
+         multiThread(times);
     }
 
     // FIXME 当 MethodInvokingJobDetailFactoryBean#concurrent 为 true 时, 等价于 multiThread
@@ -28,15 +28,18 @@ public class TeacherServiceImpl {
     }
 
     private void multiThread(Long times) {
-        executorService.submit(() -> costTime(times));
+        for (int i = 0; i < 10; i++) {
+            int finalI = i;
+            executorService.submit(() -> costTime(times, finalI));
+        }
     }
 
-    private void costTime(Long times) {
+    private void costTime(Long times, int finalI) {
         String now = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(LocalDateTime.now());
         long begin = System.currentTimeMillis();
         // FIXME 模拟超时任务, 测试 MethodInvokingJobDetailFactoryBean#concurrent 为 false 时, 当上一个任务未执行完毕前, 是否开启下一个任务
         try {
-            TimeUnit.SECONDS.sleep(20L);
+            TimeUnit.SECONDS.sleep(finalI * 10);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
