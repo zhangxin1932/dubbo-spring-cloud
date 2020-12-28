@@ -78,7 +78,7 @@ public class JobConfiguration03 {
     public CronTriggerFactoryBean teacherCronTriggerFactoryBean(@Qualifier(value = "teacherMethodInvokingJobDetailFactoryBean") MethodInvokingJobDetailFactoryBean teacherMethodInvokingJobDetailFactoryBean) {
         CronTriggerFactoryBean bean = new CronTriggerFactoryBean();
         bean.setJobDetail(Objects.requireNonNull(teacherMethodInvokingJobDetailFactoryBean.getObject()));
-        bean.setCronExpression("0/5 * * * * ?");
+        bean.setCronExpression("0/1 * * * * ?");
         return bean;
     }
 
