@@ -1,38 +1,111 @@
 package com.zy.research.concurrent;
 
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import io.netty.util.concurrent.DefaultThreadFactory;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 public class ThreadPoolExecutorTest {
 
-    private static final Map<Long, Long> MAP = new ConcurrentHashMap<>();
-
     public static void main(String[] args) {
-        for (Long i = 1L; i < 100L; i++) {
-            MAP.put(i, i);
-        }
+        /*ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(1, 1, 0L, TimeUnit.SECONDS,
+                // new LinkedBlockingQueue<>(1),
+                new SynchronousQueue<>(),
+                new DefaultThreadFactory("my-threadFactory"),
+                new ThreadPoolExecutor.CallerRunsPolicy()) {
+            @Override
+            protected void afterExecute(Runnable r, Throwable t) {
+                // fixme, 这里也可以解决 submit 不打印堆栈信息的问题
+                t.printStackTrace();
+            }
+        };*/
 
         ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(1, 1, 0L, TimeUnit.SECONDS,
-                new LinkedBlockingQueue<>(1),
+                // new LinkedBlockingQueue<>(1),
+                new SynchronousQueue<>(),
                 new DefaultThreadFactory("my-threadFactory"),
+                // customThreadFactory(), // fixme, 这里也可以解决 submit 不打印堆栈信息的问题
                 new ThreadPoolExecutor.CallerRunsPolicy());
 
-        for (long i = 1L; i < 100; i++) {
-            Long finalI = i;
-            threadPoolExecutor.submit(() -> {
-                System.out.println(MAP.get(finalI));
-                MAP.remove(finalI);
-            });
+        for (int i = 1; i < 10; i++) {
+            // testExecute(threadPoolExecutor, finalI);
+            // testSubmit(threadPoolExecutor, finalI);
+            // testExecuteCatchThrowable(threadPoolExecutor, finalI);
+            testSubmitCatchThrowable(threadPoolExecutor, i);
         }
     }
 
-    private static void release(Long id) {
-        MAP.put(id, 0L);
+    /**
+     * 执行 execute 方法(任务内部不捕获异常)
+     * @param threadPoolExecutor
+     * @param finalI
+     */
+    private static void testExecute(ThreadPoolExecutor threadPoolExecutor, int finalI) {
+        // fixme, execute 方法 ==> 执行时抛出了异常, 此处会打印堆栈信息
+        threadPoolExecutor.execute(() -> {
+            System.out.println(Thread.currentThread().getName() + " ===> " + finalI);
+            throw new RuntimeException(Thread.currentThread().getName() + " ===> " + "error --》 " + finalI);
+        });
+    }
+
+    /**
+     * 执行 submit 方法(任务内部不捕获异常)
+     * @param threadPoolExecutor
+     * @param finalI
+     */
+    private static void testSubmit(ThreadPoolExecutor threadPoolExecutor, int finalI) {
+        // fixme, submit 方法 ==> 执行时抛出了异常, 此处不会打印堆栈信息
+        threadPoolExecutor.submit(() -> {
+            System.out.println(Thread.currentThread().getName() + " ===> " + finalI);
+            throw new RuntimeException(Thread.currentThread().getName() + " ===> " + "error --》 " + finalI);
+        });
+    }
+
+    /**
+     * 执行 execute 方法(任务内部捕获异常)
+     * @param threadPoolExecutor
+     * @param finalI
+     */
+    private static void testExecuteCatchThrowable(ThreadPoolExecutor threadPoolExecutor, int finalI) {
+        threadPoolExecutor.execute(() -> {
+            try {
+                System.out.println(Thread.currentThread().getName() + " ===> " + finalI);
+                throw new RuntimeException(Thread.currentThread().getName() + " ===> " + "error --》 " + finalI);
+            } catch (Throwable e) {
+                // fixme, 任务内部捕获所有异常, 打印堆栈信息
+                e.printStackTrace();
+            }
+        });
+    }
+
+    /**
+     * 执行 execute 方法(任务内部捕获异常)
+     * @param threadPoolExecutor
+     * @param finalI
+     */
+    private static void testSubmitCatchThrowable(ThreadPoolExecutor threadPoolExecutor, int finalI) {
+        // fixme, execute 方法 ==> 执行时抛出了异常
+        threadPoolExecutor.submit(() -> {
+            try {
+                System.out.println(Thread.currentThread().getName() + " ===> " + finalI);
+                throw new RuntimeException(Thread.currentThread().getName() + " ===> " + "error --》 " + finalI);
+            } catch (Throwable e) {
+                // fixme, 任务内部捕获所有异常, 打印堆栈信息
+                e.printStackTrace();
+            }
+        });
+    }
+
+    private static ThreadFactory customThreadFactory() {
+        Thread.UncaughtExceptionHandler uncaughtExceptionHandler = (t, e) -> {
+            // fixme, 这里可以打印各种堆栈信息及日志
+            e.printStackTrace();
+        };
+
+        return new ThreadFactoryBuilder()
+                .setNameFormat("custom-threadFactory")
+                .setUncaughtExceptionHandler(uncaughtExceptionHandler)
+                .build();
     }
 
 }
