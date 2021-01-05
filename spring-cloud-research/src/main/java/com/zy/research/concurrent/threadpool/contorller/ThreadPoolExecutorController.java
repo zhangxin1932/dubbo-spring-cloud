@@ -27,6 +27,15 @@ public class ThreadPoolExecutorController {
         return threadPoolExecutorService.getAllThreadPoolExecutors();
     }
 
+    /**
+     * 更新操作时需注意:
+     * 1.参数校验: 严格校验范围
+     * 2.当这个方法被设计为 RPC 接口方法作为服务提供方时, 由于服务调用方(比如后台)默认是只调用一台机器, 故需广播调用
+     * 2.1 方案1: dubbo 配置集群调用
+     * 2.2 方案2: 调用方发 MQ 消息, 应用消费 MQ 消息(消费模式为 广播消费)
+     * @param threadPoolExecutorDTO
+     * @return
+     */
     @RequestMapping("updateThreadPoolByName")
     public Boolean updateThreadPoolByName(@RequestBody ThreadPoolExecutorDTO threadPoolExecutorDTO) {
         Assert.notNull(threadPoolExecutorDTO, "threadPoolExecutorDTO cannot be null.");
