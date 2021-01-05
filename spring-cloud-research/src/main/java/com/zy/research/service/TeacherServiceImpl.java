@@ -1,5 +1,6 @@
 package com.zy.research.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -8,7 +9,12 @@ import java.util.concurrent.*;
 @Service("teacherService")
 public class TeacherServiceImpl {
 
-    private static final ExecutorService executorService = Executors.newFixedThreadPool(10);
+
+    @Autowired
+    private ThreadPoolExecutor teacherThreadPoolExecutor;
+
+    @Autowired
+    private ThreadPoolExecutor stuThreadPoolExecutor;
 
     public void teach(Long times) {
 //        singleton();
@@ -28,9 +34,13 @@ public class TeacherServiceImpl {
     }
 
     private void multiThread(Long times) {
-        for (int i = 0; i < 10; i++) {
-            int finalI = i;
-            executorService.submit(() -> costTime(times, finalI));
+        for (int i = 0; i < 5; i++) {
+            stuThreadPoolExecutor.execute(() -> {
+                for (int j = 0; j < 10; j++) {
+                    int finalI = j;
+                    teacherThreadPoolExecutor.execute(() -> costTime(times, finalI));
+                }
+            });
         }
     }
 
