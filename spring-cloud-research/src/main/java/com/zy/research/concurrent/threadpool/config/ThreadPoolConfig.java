@@ -7,6 +7,10 @@ import org.springframework.context.annotation.Configuration;
 
 import java.util.concurrent.*;
 
+/**
+ * https://www.cnblogs.com/warehouse/p/10732965.html
+ * https://tech.meituan.com/2020/04/02/java-pooling-pratice-in-meituan.html
+ */
 @Configuration
 public class ThreadPoolConfig {
 

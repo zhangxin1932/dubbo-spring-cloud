@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
@@ -57,19 +58,22 @@ public class ThreadPoolExecutorServiceImpl {
         if (Objects.isNull(executor)) {
             return null;
         }
+        BlockingQueue<Runnable> queue = executor.getQueue();
         return ThreadPoolExecutorDTO.builder()
                 .poolName(poolName)
                 .corePoolSize(executor.getCorePoolSize())
                 .maximumPoolSize(executor.getMaximumPoolSize())
                 .largestPoolSize(executor.getLargestPoolSize())
                 .poolSize(executor.getPoolSize())
-                .queueSize(Objects.isNull(executor.getQueue()) ? 0 : executor.getQueue().size())
+                .queueSize(queue.size())
+                .queueRemainingCapacity(queue.remainingCapacity())
+                .queueType(queue.getClass().getSimpleName())
                 .keepAliveTime(executor.getKeepAliveTime(TimeUnit.SECONDS))
                 .completedTaskCount(executor.getCompletedTaskCount())
                 .activeCount(executor.getActiveCount())
                 .taskCount(executor.getTaskCount())
                 .allowCoreThreadTimeOut(executor.allowsCoreThreadTimeOut())
-                .rejectHandlerClassName(Objects.isNull(executor.getRejectedExecutionHandler()) ? "" : executor.getRejectedExecutionHandler().getClass().getName())
+                .rejectHandlerClassName(executor.getRejectedExecutionHandler().getClass().getSimpleName())
                 .build();
     }
 
