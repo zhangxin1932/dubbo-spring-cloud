@@ -11,6 +11,11 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * 这里的查询方法, 需要前端页面的配合:
+ * 方案1: 前端页面定时器定时调用后端查询线程池状态的接口, 并更新状态
+ * 方案2: 前端页面与后端接口采用 websocket 通信
+ */
 @Service
 public class ThreadPoolExecutorServiceImpl {
 

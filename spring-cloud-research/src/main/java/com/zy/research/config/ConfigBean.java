@@ -6,6 +6,8 @@ import org.springframework.beans.factory.config.MethodInvokingFactoryBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
+import org.springframework.web.socket.server.standard.ServerEndpointExporter;
+
 import javax.annotation.PostConstruct;
 import java.util.Map;
 import java.util.Objects;
@@ -22,6 +24,11 @@ public class ConfigBean {
 
     @Value("#{@systemProperties}")
     private Map<String, Object> v1;
+
+    @Bean
+    public ServerEndpointExporter serverEndpointExporter() {
+        return new ServerEndpointExporter();
+    }
 
     @Bean(value = "methodInvokingFactoryBean")
     @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
