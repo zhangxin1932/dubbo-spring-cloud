@@ -12,10 +12,6 @@
 <body>
 
 <h3>WebSocket测试，在<span style="color:red">控制台</span>查看测试信息输出！</h3>
-<h4>
-    [url=/api/ws/sendOne?message=单发消息内容&id=none]单发消息链接[/url]
-    [url=/api/ws/sendAll?message=群发消息内容]群发消息链接[/url]
-</h4>
 
 <script type="text/javascript">
     var socket;
@@ -26,7 +22,7 @@
 
         // 实现化WebSocket对象
         // 指定要连接的服务器地址与端口建立连接
-        // 注意ws、wss使用不同的端口。我使用自签名的证书测试，
+        // 注意ws、wss使用不同的端口。可使用自签名的证书测试，
         // 无法使用wss，浏览器打开WebSocket时报错
         // ws对应http、wss对应https。
         socket = new WebSocket("ws://localhost:8081/ws/getAllThreadPoolExecutors");
