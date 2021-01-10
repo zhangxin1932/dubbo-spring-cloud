@@ -1,11 +1,11 @@
-package com.zy.research.concurrent;
+package com.zy.research.concurrent.threadpool;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import io.netty.util.concurrent.DefaultThreadFactory;
 
 import java.util.concurrent.*;
 
-public class ThreadPoolExecutorTest01 {
+public class ThreadPoolExceptionCatch01 {
 
     public static void main(String[] args) {
         /*ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(1, 1, 0L, TimeUnit.SECONDS,
