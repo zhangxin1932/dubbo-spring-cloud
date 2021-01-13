@@ -13,6 +13,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>spring-cloud-two-datasource</module>
+        <module>spring-cloud-sharding-mybatis</module>
     </modules>
 
 

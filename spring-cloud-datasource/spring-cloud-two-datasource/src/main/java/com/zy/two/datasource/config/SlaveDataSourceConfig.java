@@ -16,7 +16,7 @@ import javax.sql.DataSource;
 
 @Configuration
 @MapperScan(basePackages = "com.zy.two.datasource.mapper.slave",sqlSessionFactoryRef = "slaveSqlSessionFactory")
-public class SlaveSourceConfig {
+public class SlaveDataSourceConfig {
 
     @Bean(name = "slaveDataSource")
     @ConfigurationProperties("datasource.slave")
