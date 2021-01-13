@@ -14,8 +14,8 @@ public class TbOrderController {
     private TbOrderMapper tbOrderMapper;
 
     @RequestMapping("insert")
-    public void insert(String orderName, Long id) {
-        tbOrderMapper.insert(orderName, id);
+    public void insert(String orderName) {
+        tbOrderMapper.insert(orderName);
     }
 
     @RequestMapping("selectOrderById")

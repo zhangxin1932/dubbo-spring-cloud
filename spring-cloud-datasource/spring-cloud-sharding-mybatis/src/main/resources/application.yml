@@ -14,15 +14,15 @@ spring:
           actual-data-nodes: ds0.tb_order_$->{0..1}
           table-strategy:
             inline:
-              sharding-column: id
-              algorithm-expression: tb_order_$->{id % 2}
-#          key-generator:
-#            column: id
-#            type: SNOWFLAKE
-#            props:
-#              worker:
-#                id: 123
-#      binding-tables: tb_order
+              sharding-column: order_id
+              algorithm-expression: tb_order_$->{order_id % 2}
+          key-generator:
+            column: order_id
+            type: SNOWFLAKE
+            props:
+              worker:
+                id: 123
+      binding-tables: tb_order
 mybatis:
   mapper-locations: classpath:mapper/*.xml
   configuration:
