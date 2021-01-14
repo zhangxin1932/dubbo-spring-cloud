@@ -5,16 +5,17 @@
 
     <resultMap id="orderResultMap" type="com.zy.sharding.mybatis.entity.TbOrder">
         <id column="id" property="id"/>
+        <result column="order_id" property="orderId"/>
         <result column="order_name" property="orderName"/>
     </resultMap>
 
     <select id="selectOrders" resultMap="orderResultMap">
-        select id, order_name
+        select id, order_id, order_name
         from tb_order;
     </select>
 
     <select id="selectOrderById" resultMap="orderResultMap">
-        select id, order_name
+        select id, order_id, order_name
         from tb_order
         where order_id=#{orderId};
     </select>

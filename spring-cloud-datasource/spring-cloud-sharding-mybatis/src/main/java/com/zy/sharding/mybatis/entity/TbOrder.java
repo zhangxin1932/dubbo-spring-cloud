@@ -11,5 +11,6 @@ import java.io.Serializable;
 @AllArgsConstructor
 public class TbOrder implements Serializable {
     private Long id;
+    private Long orderId;
     private String orderName;
 }
