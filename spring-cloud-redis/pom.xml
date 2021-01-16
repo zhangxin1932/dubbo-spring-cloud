@@ -13,6 +13,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>spring-data-redis</module>
+        <module>spring-data-redis-integration</module>
     </modules>
 
 
