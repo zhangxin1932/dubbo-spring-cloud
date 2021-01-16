@@ -1,4 +1,4 @@
-package com.zy.spring.data.redis;
+package com.zy.spring.data.redis.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.zy.spring.data.redis.lock.LockValue;
@@ -6,7 +6,6 @@ import com.zy.spring.data.redis.lock.RedisLock;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import javax.annotation.Resource;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
