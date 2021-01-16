@@ -1,0 +1,70 @@
+package com.zy.spring.data.redis.lock;
+
+import com.google.common.collect.Lists;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.script.DefaultRedisScript;
+import org.springframework.data.redis.core.script.RedisScript;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
+import java.util.Objects;
+
+/**
+ * http://redis.cn/topics/distlock.html
+ * https://redis.io/topics/distlock
+ */
+@Component
+public class RedisLock {
+
+    public static final Long REDIS_LOCK_OR_UNLOCK_SUCCESS = 1L;
+    public static final String OK = "OK";
+
+    private RedisScript<String> redisLockScript;
+    private RedisScript<Long> redisUnlockScript;
+
+    @PostConstruct
+    public void init() {
+        String lockScript = "return redis.call('set',KEYS[1],ARGV[1],'NX','EX',ARGV[2]);";
+        redisLockScript = new DefaultRedisScript<>(lockScript, String.class);
+
+        String unlockScript = "if redis.call('get',KEYS[1]) == ARGV[1] then " +
+                "return redis.call('del',KEYS[1]) " +
+                "else " +
+                "return 0 " +
+                "end;";
+        redisUnlockScript = new DefaultRedisScript<>(unlockScript, Long.class);
+    }
+
+    @Resource
+    private StringRedisTemplate stringRedisTemplate;
+
+    /**
+     * 由于 StringRedisTemplate 的 key 和 values, args 的默认序列化方式是 StringRedisSerializer, 所以参数均为 String
+     * @param key 键
+     * @param randomValue 随机值
+     * @param expireTime 过期时间, 这里单位是 s, 因为 lua 脚本中参数是 EX; 如果是 PX, 则为 ms.
+     * @return true, 加锁成功; false, 加锁失败
+     */
+    public boolean lock(String key, String randomValue, String expireTime) {
+        String result = stringRedisTemplate.execute(redisLockScript, Lists.newArrayList(key), randomValue, expireTime);
+        if (Objects.isNull(result)) {
+            return false;
+        }
+        return Objects.equals(result.toUpperCase(), OK);
+    }
+
+    /**
+     * 释放锁前, 要校验 value. 以防删掉其他人的锁, 比如:
+     * t1 对 k1 加锁并且成功了, 然后执行任务被阻塞, 超时后, 锁释放了;
+     * t2 再对 k1 加锁并且成功了, 正在执行任务, 但此时 t1 任务执行完毕, 没有校验 value, 直接删除了锁, 那么就会造成问题
+     *
+     * @param key 键
+     * @param randomValue 随机值
+     * @return true, 锁释放成功; false, 锁释放失败
+     */
+    public boolean unlock(String key, String randomValue) {
+        return Objects.equals(stringRedisTemplate.execute(redisUnlockScript, Lists.newArrayList(key), randomValue), REDIS_LOCK_OR_UNLOCK_SUCCESS);
+    }
+
+}

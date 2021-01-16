@@ -14,6 +14,7 @@
         <module>dubbo-spring-cloud-common</module>
         <module>spring-cloud-research</module>
         <module>spring-cloud-datasource</module>
+        <module>spring-cloud-redis</module>
     </modules>
     <packaging>pom</packaging>
 
