@@ -41,6 +41,14 @@ public class RedisLock {
 
     /**
      * 由于 StringRedisTemplate 的 key 和 values, args 的默认序列化方式是 StringRedisSerializer, 所以参数均为 String
+     * 单机下, 锁在单一节点上
+     * 主从 & 哨兵下, 锁在 master 上, slave 从 master 同步节点
+     * 集群模式下, key 会被 hash 到 16384 个 slots 的其中一个的 slot 上 (该 slot 只会存在一个 master 节点及该 master 的 slave节点上)
+     *
+     * 个人理解: redis 官网中提到的半数以上节点加锁成功, 才算获取到的锁的前提是:
+     * 我们假设有N个Redis master。这些节点完全互相独立，不存在主从复制或者其他集群协调机制.
+     * 而常规情况下搭建的 redis 集群, 是存在集群协调机制的.
+     * 也即要满足官网算法, 需搭建几个完全不通信的 redis 节点, 专门用于分布式锁服务.
      * @param key 键
      * @param randomValue 随机值
      * @param expireTime 过期时间, 这里单位是 s, 因为 lua 脚本中参数是 EX; 如果是 PX, 则为 ms.
