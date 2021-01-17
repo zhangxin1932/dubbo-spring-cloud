@@ -32,7 +32,7 @@ public class RedisMoreController {
      * @return
      */
     @RequestMapping("pipeline")
-    public ResponseEntity<Object> p1(@RequestBody Map<String, String> kvMap) {
+    public ResponseEntity<Object> pipeline(@RequestBody Map<String, String> kvMap) {
         if (Objects.isNull(kvMap) || kvMap.size() == 0) {
             return ResponseEntity.badRequest().body("入参非法");
         }
