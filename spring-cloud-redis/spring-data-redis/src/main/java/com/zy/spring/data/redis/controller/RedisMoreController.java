@@ -1,5 +1,6 @@
 package com.zy.spring.data.redis.controller;
 
+import com.zy.spring.data.redis.pubsub.RedisSubListener;
 import com.zy.spring.data.redis.util.RedisExpiredTime;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -7,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import javax.annotation.Resource;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -15,8 +15,8 @@ import java.util.Map;
 import java.util.Objects;
 
 @RestController
-@RequestMapping("/pipeline/")
-public class RedisPipelineController {
+@RequestMapping("/redis/")
+public class RedisMoreController {
 
     @Resource
     private StringRedisTemplate stringRedisTemplate;
@@ -31,7 +31,7 @@ public class RedisPipelineController {
      * @param kvMap
      * @return
      */
-    @RequestMapping("p1")
+    @RequestMapping("pipeline")
     public ResponseEntity<Object> p1(@RequestBody Map<String, String> kvMap) {
         if (Objects.isNull(kvMap) || kvMap.size() == 0) {
             return ResponseEntity.badRequest().body("入参非法");
@@ -77,4 +77,17 @@ public class RedisPipelineController {
         List<String> list = stringRedisTemplate.opsForValue().multiGet(map.keySet());
         return ResponseEntity.ok(Objects.requireNonNull(list));
     }
+
+    /**
+     * redis pub 消息
+     * @param msg
+     * @return
+     */
+    @RequestMapping("pub")
+    public ResponseEntity<String> pub(String msg) {
+        stringRedisTemplate.convertAndSend(RedisSubListener.REDIS_CHANNEL_01, msg);
+        stringRedisTemplate.convertAndSend(RedisSubListener.REDIS_CHANNEL_02, msg + "__02");
+        return ResponseEntity.ok("success");
+    }
+
 }
