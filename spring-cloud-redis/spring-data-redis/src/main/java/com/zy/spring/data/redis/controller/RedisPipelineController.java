@@ -24,9 +24,10 @@ public class RedisPipelineController {
     /**
      * 入参
      * {
-     *     "k1": 1,
-     *     "k2": "v2"
+     * "k1": 1,
+     * "k2": "v2"
      * }
+     *
      * @param kvMap
      * @return
      */
@@ -65,5 +66,15 @@ public class RedisPipelineController {
             return null;
         });
         return ResponseEntity.ok(list);
+    }
+
+    @RequestMapping("msetMget")
+    public ResponseEntity<Object> msetMget(@RequestBody Map<String, String> map) {
+        if (Objects.isNull(map) || map.size() == 0) {
+            return ResponseEntity.badRequest().body("入参非法");
+        }
+        stringRedisTemplate.opsForValue().multiSet(map);
+        List<String> list = stringRedisTemplate.opsForValue().multiGet(map.keySet());
+        return ResponseEntity.ok(Objects.requireNonNull(list));
     }
 }
