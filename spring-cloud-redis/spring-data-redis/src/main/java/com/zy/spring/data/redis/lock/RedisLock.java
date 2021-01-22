@@ -18,6 +18,7 @@ import java.util.Objects;
 public class RedisLock {
 
     public static final Long REDIS_LOCK_OR_UNLOCK_SUCCESS = 1L;
+    public static final Long REDIS_DEAD_LOCK_EXPIRED_TIME = -1L;
     public static final String OK = "OK";
 
     private RedisScript<String> redisLockScript;
@@ -61,7 +62,16 @@ public class RedisLock {
         if (Objects.isNull(result)) {
             return false;
         }
-        return Objects.equals(result.toUpperCase(), OK);
+        if (Objects.equals(result.toUpperCase(), OK)) {
+            return true;
+        }
+        // 补偿机制
+        Long ttlTime = stringRedisTemplate.getExpire(key);
+        if (Objects.equals(REDIS_DEAD_LOCK_EXPIRED_TIME, ttlTime)) {
+            // FIXME 打个日志, 标记删除了死锁
+            stringRedisTemplate.delete(key);
+        }
+        return false;
     }
 
     /**
