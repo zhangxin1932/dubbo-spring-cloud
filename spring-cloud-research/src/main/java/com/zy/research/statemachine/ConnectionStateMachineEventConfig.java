@@ -3,6 +3,11 @@ package com.zy.research.statemachine;
 import org.springframework.statemachine.annotation.OnTransition;
 import org.springframework.statemachine.annotation.WithStateMachine;
 
+/**
+ * 基于注解的状态监听器
+ *
+ * 所有 StateMachineListener 接口中定义的事件都能通过注解的方式来进行配置实现
+ */
 @WithStateMachine
 public class ConnectionStateMachineEventConfig {
 
