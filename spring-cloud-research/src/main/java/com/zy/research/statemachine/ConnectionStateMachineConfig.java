@@ -8,7 +8,8 @@ import org.springframework.statemachine.config.builders.StateMachineTransitionCo
 import java.util.EnumSet;
 
 /**
- *
+ * https://gitee.com/wphmoon/statemachine
+ * https://segmentfault.com/a/1190000019466502?utm_source=tag-newest
  * https://www.jianshu.com/p/1a4947a099e9?from=singlemessage
  *
  * Transition: 节点，是组成状态机引擎的核心
