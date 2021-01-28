@@ -10,15 +10,15 @@ import javax.annotation.PostConstruct;
 public class ConnectionStateMachineHandler {
 
     @Autowired
-    private StateMachine<ConnectionStateEnum, ConnectionEventEnum> stateMachine;
+    private StateMachine<ConnectionStateEnum, ConnectionEventEnum> connectionStateMachine;
 
     public void handle(ConnectionEventEnum connectionEvent) {
-        stateMachine.sendEvent(connectionEvent);
+        connectionStateMachine.sendEvent(connectionEvent);
     }
 
     @PostConstruct
     public void init() {
-        stateMachine.start();
+        connectionStateMachine.start();
         handle(ConnectionEventEnum.CONNECT);
     }
 
