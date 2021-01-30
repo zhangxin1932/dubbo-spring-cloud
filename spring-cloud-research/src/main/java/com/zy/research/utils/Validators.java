@@ -16,6 +16,8 @@ import java.util.function.Supplier;
  */
 public final class Validators {
 
+    private static final Callback<Object> EMPTY_CALLBACK = new Callback<Object> () {};
+
     private Validators() {
         throw new UnsupportedOperationException("Validators cannot be Instantiated.");
     }
@@ -24,25 +26,25 @@ public final class Validators {
         return ifInvalid(invalid, null);
     }
 
+    @SuppressWarnings("unchecked")
     public static <Fallback> Callback<Fallback> ifInvalid(boolean invalid, Fallback fallbackData) {
+        if (!invalid) {
+            return (Callback<Fallback>) EMPTY_CALLBACK;
+        }
         return new Callback<Fallback> () {
             @Override
             public Fallback get() {
-                return invalid ? fallbackData : null;
+                return fallbackData;
             }
 
             @Override
             public void postProcess(ValidatorHandler validatorHandler) {
-                if (invalid) {
-                    validatorHandler.handle();
-                }
+                validatorHandler.handle();
             }
 
             @Override
             public void exception(RuntimeException e) {
-                if (invalid) {
-                    throw e;
-                }
+                throw e;
             }
         };
     }
@@ -53,19 +55,21 @@ public final class Validators {
          * 校验失败时, 抛出异常
          * @param e
          */
-        void exception(RuntimeException e);
+        default void exception(RuntimeException e) {}
 
         /**
          * 校验失败时, 返回指定值, 用于降级
          * @return
          */
         @Override
-        Fallback get();
+        default Fallback get() {
+            return null;
+        };
 
         /**
          * 校验失败时, 指定处理逻辑
          */
-        void postProcess(ValidatorHandler validatorHandler);
+        default void postProcess(ValidatorHandler validatorHandler) {};
     }
 
     public interface ValidatorHandler {
