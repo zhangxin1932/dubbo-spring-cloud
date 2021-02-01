@@ -17,6 +17,11 @@ public class ThreadPoolConfig {
     private static final int PROCESSORS = Runtime.getRuntime().availableProcessors();
     public static final ConcurrentMap<String, ThreadPoolExecutor> EXECUTOR_MAP = new ConcurrentHashMap<>();
 
+    @Bean(name = "refundThreadPoolExecutor")
+    public BlockedAndFixedThreadPoolExecutor refundThreadPoolExecutor() {
+        return new BlockedAndFixedThreadPoolExecutor(PROCESSORS, 10, "refund");
+    }
+
     @Bean(name = "stuThreadPoolExecutor")
     public ThreadPoolExecutor stuThreadPoolExecutor() {
         ThreadPoolExecutor executor = new ThreadPoolExecutor(2,
