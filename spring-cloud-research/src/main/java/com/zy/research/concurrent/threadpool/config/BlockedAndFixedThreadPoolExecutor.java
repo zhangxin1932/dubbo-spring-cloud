@@ -84,11 +84,11 @@ public class BlockedAndFixedThreadPoolExecutor extends ThreadPoolExecutor {
         }
     }
 
-    public boolean getDbAlive() {
+    public boolean isDbAlive() {
         return dbAlive.get();
     }
 
-    public boolean getRpcAlive() {
+    public boolean isRpcAlive() {
         return rpcAlive.get();
     }
 

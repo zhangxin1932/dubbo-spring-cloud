@@ -25,10 +25,10 @@ public class ThreadPoolExecutorController {
     public boolean modifyStatus(String type, boolean alive) {
         if (Objects.equals(type, "db")) {
             refundThreadPoolExecutor.setDbAlive(alive);
-            return refundThreadPoolExecutor.getDbAlive();
+            return refundThreadPoolExecutor.isDbAlive();
         } else {
             refundThreadPoolExecutor.setRpcAlive(alive);
-            return refundThreadPoolExecutor.getRpcAlive();
+            return refundThreadPoolExecutor.isRpcAlive();
         }
     }
 
