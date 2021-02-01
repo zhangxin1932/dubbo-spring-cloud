@@ -19,7 +19,9 @@ public class ThreadPoolConfig {
 
     @Bean(name = "refundThreadPoolExecutor")
     public BlockedAndFixedThreadPoolExecutor refundThreadPoolExecutor() {
-        return new BlockedAndFixedThreadPoolExecutor(PROCESSORS, 10, "refund");
+        BlockedAndFixedThreadPoolExecutor executor = new BlockedAndFixedThreadPoolExecutor(PROCESSORS, 10, "refund");
+        EXECUTOR_MAP.put(PoolName.refund_executor.name(), executor);
+        return executor;
     }
 
     @Bean(name = "stuThreadPoolExecutor")

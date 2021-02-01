@@ -8,12 +8,8 @@ import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.annotation.PostConstruct;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/threadPool/")
@@ -25,18 +21,15 @@ public class ThreadPoolExecutorController {
     @Autowired
     private BlockedAndFixedThreadPoolExecutor refundThreadPoolExecutor;
 
-    @PostConstruct
-    public void init() {
-        AtomicLong num = new AtomicLong();
-        System.out.println("......>");
-        refundThreadPoolExecutor.execute(() -> System.out.println(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS").format(LocalDateTime.now()) + " ---> " + num.incrementAndGet()));
-        System.out.println("------>");
-    }
-
-    @RequestMapping("modifyDBStatus")
-    public boolean modifyDBStatus(boolean b) {
-        refundThreadPoolExecutor.setDbAlive(b);
-        return refundThreadPoolExecutor.getDbAlive();
+    @RequestMapping("modifyStatus")
+    public boolean modifyStatus(String type, boolean alive) {
+        if (Objects.equals(type, "db")) {
+            refundThreadPoolExecutor.setDbAlive(alive);
+            return refundThreadPoolExecutor.getDbAlive();
+        } else {
+            refundThreadPoolExecutor.setRpcAlive(alive);
+            return refundThreadPoolExecutor.getRpcAlive();
+        }
     }
 
     @RequestMapping("getThreadPoolExecutorByName")

@@ -62,7 +62,7 @@ public class JobConfiguration03 {
         return new TeacherJobExecutor();
     }
 
-    @Bean(value = "teacherMethodInvokingJobDetailFactoryBean")
+    /*@Bean(value = "teacherMethodInvokingJobDetailFactoryBean")
     @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
     public MethodInvokingJobDetailFactoryBean teacherMethodInvokingJobDetailFactoryBean() {
         MethodInvokingJobDetailFactoryBean bean = new MethodInvokingJobDetailFactoryBean();
@@ -85,6 +85,6 @@ public class JobConfiguration03 {
     @PostConstruct
     public void init() {
         schedulerFactoryBean.setTriggers(teacherCronTriggerFactoryBean(teacherMethodInvokingJobDetailFactoryBean()).getObject());
-    }
+    }*/
 
 }
