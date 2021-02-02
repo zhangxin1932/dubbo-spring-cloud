@@ -20,6 +20,7 @@ public class ThreadPoolExecutorController {
 
     @Autowired
     private BlockedAndFixedThreadPoolExecutor refundThreadPoolExecutor;
+/*
 
     @RequestMapping("modifyStatus")
     public boolean modifyStatus(String type, boolean alive) {
@@ -31,6 +32,7 @@ public class ThreadPoolExecutorController {
             return refundThreadPoolExecutor.isRpcAlive();
         }
     }
+*/
 
     @RequestMapping("getThreadPoolExecutorByName")
     public ThreadPoolExecutorDTO getThreadPoolExecutorByName(String poolName) {

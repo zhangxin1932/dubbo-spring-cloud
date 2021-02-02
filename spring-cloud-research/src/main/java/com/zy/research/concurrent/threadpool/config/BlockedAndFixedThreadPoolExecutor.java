@@ -1,12 +1,12 @@
 package com.zy.research.concurrent.threadpool.config;
 
+import com.zy.research.concurrent.threadpool.listener.DbAndRpcHealthCheckListener;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.LongAdder;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
@@ -16,8 +16,7 @@ public class BlockedAndFixedThreadPoolExecutor extends ThreadPoolExecutor {
     private final ReentrantLock lock = new ReentrantLock();
     private final Condition condition = this.lock.newCondition();
     private static final int BLOCKING_QUEUE_SIZE = 1024 * 2;
-    private final AtomicBoolean dbAlive = new AtomicBoolean(true);
-    private final AtomicBoolean rpcAlive = new AtomicBoolean(true);
+
     @Getter
     private final int blockingQueueSize;
 
@@ -41,7 +40,7 @@ public class BlockedAndFixedThreadPoolExecutor extends ThreadPoolExecutor {
     public void execute(Runnable command) {
         this.lock.lock();
         try {
-            while (!dbAlive.get() || !rpcAlive.get()) {
+            while (!DbAndRpcHealthCheckListener.DB_ALIVE.get() || !DbAndRpcHealthCheckListener.RPC_ALIVE.get()) {
                 this.condition.await(3L, TimeUnit.SECONDS);
             }
             super.execute(command);
@@ -52,44 +51,13 @@ public class BlockedAndFixedThreadPoolExecutor extends ThreadPoolExecutor {
         }
     }
 
-    /**
-     * 其他任务通过定时任务修改此状态时, 应保证确定应用启动后修改此状态. 比如初始化后延迟 10min 后调度.
-     * @param alive
-     */
-    public void setDbAlive(boolean alive) {
+    public void signalAll() {
         this.lock.lock();
         try {
-            dbAlive.set(alive);
-            if (dbAlive.get() && rpcAlive.get()) {
-                this.condition.signalAll();
-            }
+            this.condition.signalAll();
         } finally {
             this.lock.unlock();
         }
-    }
-
-    /**
-     * 其他任务通过定时任务修改此状态时, 应保证确定应用启动后修改此状态. 比如初始化后延迟 10min 后调度.
-     * @param alive
-     */
-    public void setRpcAlive(boolean alive) {
-        this.lock.lock();
-        try {
-            rpcAlive.set(alive);
-            if (dbAlive.get() && rpcAlive.get()) {
-                this.condition.signalAll();
-            }
-        } finally {
-            this.lock.unlock();
-        }
-    }
-
-    public boolean isDbAlive() {
-        return dbAlive.get();
-    }
-
-    public boolean isRpcAlive() {
-        return rpcAlive.get();
     }
 
 }

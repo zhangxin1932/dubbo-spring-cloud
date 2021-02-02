@@ -4,7 +4,6 @@ import com.zy.research.concurrent.threadpool.common.PoolName;
 import io.netty.util.concurrent.DefaultThreadFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
 import java.util.concurrent.*;
 
 /**
@@ -17,14 +16,18 @@ public class ThreadPoolConfig {
     private static final int PROCESSORS = Runtime.getRuntime().availableProcessors();
     public static final ConcurrentMap<String, ThreadPoolExecutor> EXECUTOR_MAP = new ConcurrentHashMap<>();
 
-    @Bean(name = "refundThreadPoolExecutor")
+    public static final String REFUND_THREAD_POOL_EXECUTOR = "refundThreadPoolExecutor";
+    public static final String STU_THREAD_POOL_EXECUTOR = "stuThreadPoolExecutor";
+    public static final String TEACHER_THREAD_POOL_EXECUTOR = "teacherThreadPoolExecutor";
+
+    @Bean(name = REFUND_THREAD_POOL_EXECUTOR)
     public BlockedAndFixedThreadPoolExecutor refundThreadPoolExecutor() {
         BlockedAndFixedThreadPoolExecutor executor = new BlockedAndFixedThreadPoolExecutor(PROCESSORS, 10, "refund");
         EXECUTOR_MAP.put(PoolName.refund_executor.name(), executor);
         return executor;
     }
 
-    @Bean(name = "stuThreadPoolExecutor")
+    @Bean(name = STU_THREAD_POOL_EXECUTOR)
     public ThreadPoolExecutor stuThreadPoolExecutor() {
         ThreadPoolExecutor executor = new ThreadPoolExecutor(2,
                 2,
@@ -37,7 +40,7 @@ public class ThreadPoolConfig {
         return executor;
     }
 
-    @Bean(name = "teacherThreadPoolExecutor")
+    @Bean(name = TEACHER_THREAD_POOL_EXECUTOR)
     public ThreadPoolExecutor teacherThreadPoolExecutor() {
         ThreadPoolExecutor executor = new ThreadPoolExecutor(PROCESSORS * 2,
                 PROCESSORS * 2,
