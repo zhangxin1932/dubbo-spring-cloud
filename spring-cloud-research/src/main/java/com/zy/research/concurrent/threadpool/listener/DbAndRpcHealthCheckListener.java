@@ -1,6 +1,7 @@
 package com.zy.research.concurrent.threadpool.listener;
 
 import com.zy.research.concurrent.threadpool.config.BlockedAndFixedThreadPoolExecutor;
+import com.zy.research.concurrent.threadpool.config.RefundWorker;
 import com.zy.research.concurrent.threadpool.config.ThreadPoolConfig;
 import io.netty.util.concurrent.DefaultThreadFactory;
 import org.springframework.boot.SpringApplication;
@@ -39,6 +40,7 @@ public class DbAndRpcHealthCheckListener implements SpringApplicationRunListener
                 RPC_ALIVE.set(true);
                 if (DB_ALIVE.get() && RPC_ALIVE.get()) {
                     executor.signalAll();
+                    RefundWorker.signalAll();
                 }
             } catch (Throwable e) {
                 e.printStackTrace();
