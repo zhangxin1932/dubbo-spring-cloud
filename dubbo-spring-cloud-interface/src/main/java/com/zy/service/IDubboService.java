@@ -7,4 +7,6 @@ public interface IDubboService {
 
     DubboRespDTO dubbo(DubboReqDTO dubboReqDTO);
 
+    DubboRespDTO[] dubboCombine(DubboReqDTO dubboReqDTO);
+
 }
