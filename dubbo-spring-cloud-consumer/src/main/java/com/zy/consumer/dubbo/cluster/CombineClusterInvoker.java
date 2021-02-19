@@ -47,11 +47,11 @@ public class CombineClusterInvoker<T> extends AbstractClusterInvoker<T> {
         }
 
         // TODO 由于只部署了单机, 这里模拟调用多台机器, 然后 merge 结果.
-        for (final Invoker<T> invoker : invokers) {
+        /*for (final Invoker<T> invoker : invokers) {
             RpcInvocation subInvocation = new RpcInvocation(invocation, invoker);
             subInvocation.setAttachment(ASYNC_KEY, Boolean.TRUE.toString());
             results.put(invoker.getUrl().getAddress() + "--", invoker.invoke(subInvocation));
-        }
+        }*/
 
         // 3.获取调用结果: 摒弃异常数据, 将正常结果放入结果列表中
         List<Result> resultList = new ArrayList<>(results.size());
