@@ -1,1 +1,1 @@
-combine=com.zy.consumer.dubbo.cluster.CombineClusterInvoker
+combine=com.zy.consumer.dubbo.cluster.CombineCluster

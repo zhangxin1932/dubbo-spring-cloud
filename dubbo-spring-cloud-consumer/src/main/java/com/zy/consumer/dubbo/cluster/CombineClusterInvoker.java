@@ -39,10 +39,18 @@ public class CombineClusterInvoker<T> extends AbstractClusterInvoker<T> {
 
         // 2.异步调用所有服务提供方
         Map<String, Result> results = new HashMap<>(invokers.size());
+
         for (final Invoker<T> invoker : invokers) {
             RpcInvocation subInvocation = new RpcInvocation(invocation, invoker);
             subInvocation.setAttachment(ASYNC_KEY, Boolean.TRUE.toString());
             results.put(invoker.getUrl().getAddress(), invoker.invoke(subInvocation));
+        }
+
+        // TODO 由于只部署了单机, 这里模拟调用多台机器, 然后 merge 结果.
+        for (final Invoker<T> invoker : invokers) {
+            RpcInvocation subInvocation = new RpcInvocation(invocation, invoker);
+            subInvocation.setAttachment(ASYNC_KEY, Boolean.TRUE.toString());
+            results.put(invoker.getUrl().getAddress() + "--", invoker.invoke(subInvocation));
         }
 
         // 3.获取调用结果: 摒弃异常数据, 将正常结果放入结果列表中
@@ -64,7 +72,8 @@ public class CombineClusterInvoker<T> extends AbstractClusterInvoker<T> {
         if (resultList.isEmpty()) {
             return AsyncRpcResult.newDefaultAsyncResult(invocation);
         } else if (resultList.size() == 1) {
-            return resultList.iterator().next();
+            // 结果列表中已经过滤了 error 数据, 所以这里直接调用AsyncRpcResult的不带 Throwable 的方法
+            return AsyncRpcResult.newDefaultAsyncResult(resultList.iterator().next().getValue(), invocation);
         }
 
         Class<?> returnType;

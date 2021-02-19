@@ -5,7 +5,6 @@ import com.zy.model.DubboRespDTO;
 import com.zy.service.IDubboService;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.apache.dubbo.config.annotation.Method;
-import org.apache.dubbo.config.annotation.Reference;
 import org.apache.dubbo.config.spring.context.annotation.EnableDubbo;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -16,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @SpringBootApplication
 @EnableDubbo
 @RestController
@@ -24,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 @EnableTransactionManagement
 public class DubboSpringCloudConsumerApp {
 
-    @DubboReference(methods = {@Method(name = "dubboCombine", merger = "combine"), @Method(name = "dubbo")})
+    @DubboReference(cluster = "combine", methods = {@Method(name = "dubboCombine", merger = "list"), @Method(name = "dubbo")})
     private IDubboService iDubboService;
 
     public static void main(String[] args) {
@@ -32,7 +33,7 @@ public class DubboSpringCloudConsumerApp {
     }
 
     @RequestMapping("/dubboCombine")
-    public DubboRespDTO[] dubboCombine(@RequestBody DubboReqDTO req) {
+    public List<DubboRespDTO> dubboCombine(@RequestBody DubboReqDTO req) {
         return iDubboService.dubboCombine(req);
     }
 
