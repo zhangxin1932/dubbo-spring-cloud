@@ -1,6 +1,7 @@
 package com.zy.research.config.jdktask;
 
 import com.netflix.config.DynamicProperty;
+import io.netty.util.concurrent.DefaultThreadFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -22,7 +23,7 @@ import java.util.concurrent.TimeUnit;
 @Component
 @Slf4j
 public class NetflixTask {
-    private static ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+    private static final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor(new DefaultThreadFactory("myNetflixTask"));
 
     private Long fixedDelay = DynamicProperty.getInstance("fixedDelay").getLong();
 

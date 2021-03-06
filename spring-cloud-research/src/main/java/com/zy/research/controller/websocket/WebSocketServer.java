@@ -3,6 +3,7 @@ package com.zy.research.controller.websocket;
 import com.alibaba.fastjson.JSON;
 import com.zy.research.concurrent.threadpool.dto.ThreadPoolExecutorDTO;
 import com.zy.research.concurrent.threadpool.service.ThreadPoolExecutorServiceImpl;
+import io.netty.util.concurrent.DefaultThreadFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -132,7 +133,7 @@ public class WebSocketServer {
         System.out.println("websocket 加载");
 
         // 这里启动定时任务, 主动向客户端推送消息
-        ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+        ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor(new DefaultThreadFactory("webSocketServer"));
         executor.scheduleWithFixedDelay(() -> {
             List<ThreadPoolExecutorDTO> list = threadPoolExecutorService.getAllThreadPoolExecutors();
             try {
