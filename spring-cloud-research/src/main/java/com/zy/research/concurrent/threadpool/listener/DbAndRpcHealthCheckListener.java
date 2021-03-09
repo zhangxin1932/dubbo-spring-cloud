@@ -7,6 +7,9 @@ import io.netty.util.concurrent.DefaultThreadFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.SpringApplicationRunListener;
 import org.springframework.context.ConfigurableApplicationContext;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -23,6 +26,8 @@ public class DbAndRpcHealthCheckListener implements SpringApplicationRunListener
     public static final AtomicBoolean DB_ALIVE = new AtomicBoolean(false);
     public static final AtomicBoolean RPC_ALIVE = new AtomicBoolean(false);
 
+    private BlockedAndFixedThreadPoolExecutor executor;
+
     public DbAndRpcHealthCheckListener(SpringApplication application, String[] args) {
     }
 
@@ -32,20 +37,24 @@ public class DbAndRpcHealthCheckListener implements SpringApplicationRunListener
      */
     @Override
     public void running(ConfigurableApplicationContext context) {
-        BlockedAndFixedThreadPoolExecutor executor = (BlockedAndFixedThreadPoolExecutor) context.getBean(ThreadPoolConfig.REFUND_THREAD_POOL_EXECUTOR);
-        scheduledExecutorService.scheduleWithFixedDelay(() -> {
-            try {
-                System.out.println("----> 这里执行 db 健康检查的任务, 根据健康检查的情况, 修改 dbAlive 状态.");
-                DB_ALIVE.set(true);
-                RPC_ALIVE.set(true);
-                if (DB_ALIVE.get() && RPC_ALIVE.get()) {
-                    executor.signalAll();
-                    RefundWorker.signalAll();
-                }
-            } catch (Throwable e) {
-                e.printStackTrace();
+        this.executor = (BlockedAndFixedThreadPoolExecutor) context.getBean(ThreadPoolConfig.REFUND_THREAD_POOL_EXECUTOR);
+        execute();
+    }
+
+    private void execute() {
+        try {
+            System.out.println(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss:SSS").format(LocalDateTime.now()) + "----> 这里执行 db 健康检查的任务, 根据健康检查的情况, 修改 dbAlive 状态.");
+            DB_ALIVE.set(true);
+            RPC_ALIVE.set(true);
+            if (DB_ALIVE.get() && RPC_ALIVE.get()) {
+                executor.signalAll();
+                RefundWorker.signalAll();
             }
-        }, 60L, 10L, TimeUnit.SECONDS);
+        } catch (Throwable e) {
+            e.printStackTrace();
+        } finally {
+            scheduledExecutorService.schedule(this::execute, 5L, TimeUnit.SECONDS);
+        }
     }
 
 }
