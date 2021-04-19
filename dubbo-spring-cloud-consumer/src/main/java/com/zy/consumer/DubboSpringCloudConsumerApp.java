@@ -6,6 +6,7 @@ import com.zy.service.IDubboService;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.apache.dubbo.config.annotation.Method;
 import org.apache.dubbo.config.spring.context.annotation.EnableDubbo;
+import org.apache.dubbo.rpc.service.EchoService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -34,6 +35,13 @@ public class DubboSpringCloudConsumerApp {
 
     @RequestMapping("/dubboCombine")
     public List<DubboRespDTO> dubboCombine(@RequestBody DubboReqDTO req) {
+        // TODO 进行回声测试: 强制转型为 EchoService
+        EchoService echoService = (EchoService) iDubboService;
+        System.out.println("进行回声测试 --> " + echoService.$echo("hello"));
+
+        // TODO 泛化调用
+        // https://www.cnblogs.com/flyingeagle/p/8908317.html
+        //
         return iDubboService.dubboCombine(req);
     }
 
