@@ -7,6 +7,10 @@ import java.util.List;
 
 public interface IDubboService {
 
+    default String ping(String msg) {
+        return msg;
+    }
+
     DubboRespDTO dubbo(DubboReqDTO dubboReqDTO);
 
     List<DubboRespDTO> dubboCombine(DubboReqDTO dubboReqDTO);

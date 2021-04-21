@@ -8,7 +8,7 @@ import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.stereotype.Component;
 import java.util.List;
 
-@DubboService
+@DubboService(group = "g1", version = "1.0.0")
 @Component
 public class IDubboServiceImpl implements IDubboService {
 

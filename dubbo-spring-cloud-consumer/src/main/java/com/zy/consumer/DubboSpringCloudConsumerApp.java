@@ -3,15 +3,12 @@ package com.zy.consumer;
 import com.zy.model.DubboReqDTO;
 import com.zy.model.DubboRespDTO;
 import com.zy.service.IDubboService;
-import org.apache.dubbo.common.URL;
-import org.apache.dubbo.common.extension.ExtensionLoader;
+import org.apache.dubbo.config.ReferenceConfig;
+import org.apache.dubbo.config.RegistryConfig;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.apache.dubbo.config.annotation.Method;
 import org.apache.dubbo.config.spring.context.annotation.EnableDubbo;
-import org.apache.dubbo.rpc.Exporter;
-import org.apache.dubbo.rpc.Invoker;
-import org.apache.dubbo.rpc.Protocol;
-import org.apache.dubbo.rpc.ProxyFactory;
+import org.apache.dubbo.config.utils.ReferenceConfigCache;
 import org.apache.dubbo.rpc.service.EchoService;
 import org.apache.dubbo.rpc.service.GenericService;
 import org.springframework.boot.SpringApplication;
@@ -24,7 +21,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.PostConstruct;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @SpringBootApplication
 @EnableDubbo
@@ -34,11 +33,41 @@ import java.util.List;
 @EnableTransactionManagement
 public class DubboSpringCloudConsumerApp {
 
-    @DubboReference(cluster = "combine", methods = {@Method(name = "dubboCombine", merger = "list"), @Method(name = "dubbo")})
+    @DubboReference(group = "g1", version = "1.0.0", cluster = "combine", methods = {@Method(name = "dubboCombine", merger = "list"), @Method(name = "dubbo")})
     private IDubboService iDubboService;
+
+    private RegistryConfig registry;
 
     public static void main(String[] args) {
         SpringApplication.run(DubboSpringCloudConsumerApp.class, args);
+    }
+
+    @RequestMapping("/dubboGeneric")
+    public Object dubboGeneric() {
+        ReferenceConfig<GenericService> reference = new ReferenceConfig<>();
+        // 弱类型接口名
+        reference.setInterface("com.zy.service.IDubboService");
+        // 声明为泛化接口
+        reference.setGeneric(Boolean.TRUE.toString());
+
+        reference.setRegistry(registry);
+        reference.setGroup("g1");
+        reference.setVersion("1.0.0");
+
+        // 用 GenericService 可以替代所有接口引用
+        // GenericService genericService = reference.get();
+        GenericService genericService = ReferenceConfigCache.getCache().get(reference);
+
+        return genericService.$invoke("ping", new String[]{"java.lang.String"}, new Object[]{"OK"});
+
+        /*final Map<String, Object> dubboReqDTO = new HashMap<>(2);
+        dubboReqDTO.put("name", "tom");
+        return genericService.$invoke("dubbo",
+                new String[]{"com.zy.model.DubboReqDTO"},
+                new Object[]{dubboReqDTO});*/
+
+        // EchoService echoService = (EchoService) genericService;
+        // return echoService.$echo("hello world");
     }
 
     @RequestMapping("/dubboCombine")
@@ -55,15 +84,8 @@ public class DubboSpringCloudConsumerApp {
 
     @PostConstruct
     public void init() throws ClassNotFoundException {
-        final String interfaceName = "com.zy.service.IDubboService";
-        ProxyFactory proxyFactory = ExtensionLoader.getExtensionLoader(ProxyFactory.class).getAdaptiveExtension();
-        Protocol protocol = ExtensionLoader.getExtensionLoader(Protocol.class).getAdaptiveExtension();
-        URL url = URL.valueOf("dubbo://192.168.0.156.2181/" + interfaceName + "?version=1.0.0");
-        Invoker<?> refer = protocol.refer(Class.forName(interfaceName), url);
-
-        GenericService client = (GenericService) proxyFactory.getProxy(refer, true);
-        Object result = client.$invoke("dubbo", new String[]{"com.zy.model.DubboReqDTO"}, new Object[]{"haha"});
-        System.out.println(result);
+        this.registry = new RegistryConfig();
+        this.registry.setAddress("zookeeper://192.168.0.156:2181");
     }
 
 }
